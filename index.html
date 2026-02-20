@@ -872,7 +872,18 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
 
   function matchingsOfFour(four) {
     const [a,b,c,d] = four;
-    return [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
+    const all = [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
+    // Per interclub rules: strongest duo plays high match, weakest plays low.
+    // Only keep the pairing(s) that maximize the top duo sum.
+    let bestHigh = 0;
+    for (const m of all) {
+      const hi = Math.max(ptsMap[m[0][0]] + ptsMap[m[0][1]], ptsMap[m[1][0]] + ptsMap[m[1][1]]);
+      if (hi > bestHigh) bestHigh = hi;
+    }
+    return all.filter(m => {
+      const hi = Math.max(ptsMap[m[0][0]] + ptsMap[m[0][1]], ptsMap[m[1][0]] + ptsMap[m[1][1]]);
+      return hi === bestHigh;
+    });
   }
 
   const rotations = [];
