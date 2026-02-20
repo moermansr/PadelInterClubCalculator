@@ -19,6 +19,10 @@
     --orange: #f59e0b;
     --orange-bg: rgba(245,158,11,.12);
     --red: #ef4444;
+    --pink: #f472b6;
+    --pink-bg: rgba(244,114,182,.1);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,.12);
     --radius: 12px;
     --radius-sm: 8px;
   }
@@ -35,32 +39,22 @@
   header {
     background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
     border-bottom: 1px solid var(--border);
-    padding: 24px 0;
+    padding: 20px 0;
     text-align: center;
   }
-  header h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
+  header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
   header h1 span { color: var(--accent); }
-  header p { color: var(--text-muted); font-size: .9rem; margin-top: 4px; }
+  header p { color: var(--text-muted); font-size: .85rem; margin-top: 2px; }
 
   /* Layout */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 16px;
-  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 20px 16px; }
   .grid {
     display: grid;
-    grid-template-columns: 340px 1fr;
-    gap: 24px;
+    grid-template-columns: 380px 1fr;
+    gap: 20px;
     align-items: start;
   }
-  @media (max-width: 860px) {
-    .grid { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
   /* Cards */
   .card {
@@ -70,64 +64,63 @@
     overflow: hidden;
   }
   .card-header {
-    padding: 16px 20px;
+    padding: 12px 16px;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  .card-header h2 {
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  .card-body { padding: 16px 20px; }
+  .card-header h2 { font-size: .9rem; font-weight: 600; }
+  .card-body { padding: 12px 16px; }
   .badge {
-    font-size: .75rem;
-    padding: 2px 10px;
+    font-size: .7rem;
+    padding: 2px 8px;
     border-radius: 999px;
     font-weight: 600;
   }
   .badge-blue { background: rgba(59,130,246,.15); color: var(--accent); }
   .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-pink { background: var(--pink-bg); color: var(--pink); }
+
+  /* Sidebar */
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
 
   /* Player list */
-  .player-list { display: flex; flex-direction: column; gap: 4px; }
+  .player-list { display: flex; flex-direction: column; gap: 2px; }
   .player-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
+    gap: 8px;
+    padding: 7px 8px;
+    border-radius: 6px;
     cursor: pointer;
     transition: background .15s;
     user-select: none;
   }
   .player-item:hover { background: var(--surface2); }
-  .player-item.selected { background: rgba(59,130,246,.1); }
+  .player-item.selected { background: rgba(59,130,246,.08); }
 
   /* Custom checkbox */
   .check {
-    width: 22px; height: 22px;
+    width: 20px; height: 20px;
     border: 2px solid var(--border);
-    border-radius: 6px;
+    border-radius: 5px;
     display: flex; align-items: center; justify-content: center;
     transition: all .15s;
     flex-shrink: 0;
   }
-  .player-item.selected .check {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
+  .player-item.selected .check { background: var(--accent); border-color: var(--accent); }
   .check svg { display: none; }
   .player-item.selected .check svg { display: block; }
 
-  .player-name { flex: 1; font-weight: 500; }
+  .player-name { flex: 1; font-weight: 500; font-size: .88rem; }
   .player-pts {
-    font-size: .8rem;
+    font-size: .72rem;
     color: var(--text-muted);
     background: var(--surface2);
-    padding: 2px 8px;
+    padding: 1px 7px;
     border-radius: 999px;
+    flex-shrink: 0;
   }
 
   /* Select all bar */
@@ -135,55 +128,78 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 0 12px;
+    padding: 6px 0 8px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
   .select-bar label {
-    font-size: .85rem;
+    font-size: .8rem;
     color: var(--text-muted);
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 6px;
   }
-  .select-bar label input { accent-color: var(--accent); width:16px; height:16px; }
+  .select-bar label input { accent-color: var(--accent); width:15px; height:15px; }
+  .side-legend {
+    font-size: .7rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 6px;
+  }
+  .side-legend span { opacity: .7; }
+
+  /* Side toggle */
+  .side-toggle {
+    display: flex;
+    flex-shrink: 0;
+  }
+  .side-btn {
+    width: 24px; height: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: .6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .15s;
+    padding: 0;
+    line-height: 1;
+  }
+  .side-btn:first-child { border-radius: 4px 0 0 4px; }
+  .side-btn:last-child { border-radius: 0 4px 4px 0; }
+  .side-btn:not(:first-child) { border-left: none; }
+  .side-btn.active-L { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+  .side-btn.active-B { background: var(--border); border-color: var(--border); color: #fff; }
+  .side-btn.active-R { background: #8b5cf6; border-color: #8b5cf6; color: #fff; }
+  .side-btn:hover:not([class*="active-"]) { background: var(--surface2); }
 
   /* Settings */
-  .settings-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 16px;
-  }
   .field label {
     display: block;
-    font-size: .8rem;
+    font-size: .75rem;
     color: var(--text-muted);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     font-weight: 500;
   }
   .field input, .field select {
     width: 100%;
-    padding: 8px 12px;
+    padding: 7px 10px;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: 6px;
     color: var(--text);
-    font-size: .9rem;
+    font-size: .85rem;
     outline: none;
     transition: border .15s;
   }
-  .field input:focus, .field select:focus {
-    border-color: var(--accent);
-  }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
   .field select option { background: var(--bg); }
-  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
   /* Generate button */
   .btn-generate {
     width: 100%;
-    margin-top: 20px;
     padding: 14px;
     background: var(--accent);
     color: #fff;
@@ -196,11 +212,114 @@
   }
   .btn-generate:hover { background: var(--accent-hover); }
   .btn-generate:active { transform: scale(.98); }
-  .btn-generate:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-    transform: none;
+  .btn-generate:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+  /* Add player */
+  .add-player-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
   }
+  .add-player-row input {
+    flex: 1;
+    padding: 6px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: .82rem;
+    outline: none;
+  }
+  .add-player-row input:focus { border-color: var(--accent); }
+  .add-player-row button {
+    padding: 6px 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: .82rem;
+    font-weight: 600;
+  }
+
+  /* Remove player btn */
+  .player-remove {
+    width: 22px; height: 22px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all .15s;
+    flex-shrink: 0;
+    font-size: .85rem;
+  }
+  .player-item:hover .player-remove { opacity: 1; }
+  .player-remove:hover { background: rgba(239,68,68,.15); color: var(--red); }
+
+  /* Preferred duos */
+  .duo-select-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .duo-select-row select {
+    flex: 1;
+    padding: 7px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: .82rem;
+    outline: none;
+  }
+  .duo-select-row select:focus { border-color: var(--accent); }
+  .duo-select-row select option { background: var(--bg); }
+  .duo-select-row button {
+    padding: 7px 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: .82rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .duo-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .duo-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    background: var(--pink-bg);
+    border: 1px solid rgba(244,114,182,.2);
+    border-radius: 999px;
+    font-size: .78rem;
+    color: var(--pink);
+  }
+  .duo-chip-remove {
+    background: none;
+    border: none;
+    color: var(--pink);
+    cursor: pointer;
+    font-size: .85rem;
+    line-height: 1;
+    padding: 0 1px;
+    opacity: .6;
+  }
+  .duo-chip-remove:hover { opacity: 1; }
 
   /* Results area */
   .results-placeholder {
@@ -211,45 +330,74 @@
     min-height: 300px;
     color: var(--text-muted);
     text-align: center;
-    gap: 12px;
+    gap: 10px;
   }
-  .results-placeholder svg { opacity: .3; }
+  .results-placeholder svg { opacity: .25; }
 
   /* Solution navigation */
   .sol-nav {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 20px;
+    gap: 10px;
+    padding: 14px 16px;
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
   }
   .sol-nav button {
-    padding: 6px 14px;
+    padding: 5px 12px;
     background: var(--surface2);
     color: var(--text);
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: 6px;
     cursor: pointer;
-    font-size: .85rem;
+    font-size: .82rem;
     transition: background .15s;
   }
   .sol-nav button:hover { background: var(--border); }
   .sol-nav button:disabled { opacity: .3; cursor: not-allowed; }
   .sol-nav .sol-label {
     font-weight: 600;
-    font-size: .95rem;
-    min-width: 160px;
+    font-size: .9rem;
+    min-width: 140px;
     text-align: center;
   }
   .sol-nav .sol-total {
     margin-left: auto;
-    font-size: .8rem;
+    font-size: .75rem;
     color: var(--text-muted);
   }
 
+  /* Score bar */
+  .score-bar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(30,41,59,.5);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .score-bar .score-label {
+    font-size: .72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: .03em;
+  }
+  .score-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 600;
+  }
+  .score-pill-pref { background: var(--pink-bg); color: var(--pink); }
+  .score-pill-side { background: var(--purple-bg); color: var(--purple); }
+
   /* Rotation cards */
-  .rotations { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .rotations { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
   .rotation-card {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -257,97 +405,124 @@
     overflow: hidden;
   }
   .rotation-header {
-    padding: 12px 16px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
     background: var(--surface2);
   }
-  .rotation-header h3 { font-size: .9rem; font-weight: 600; }
-  .rotation-header .rot-total {
-    font-size: .8rem;
-    color: var(--text-muted);
-  }
+  .rotation-header h3 { font-size: .85rem; font-weight: 600; }
+  .rotation-header .rot-total { font-size: .75rem; color: var(--text-muted); }
 
   .match-row {
-    display: grid;
-    grid-template-columns: 50px 1fr auto;
+    display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
+    gap: 10px;
+    padding: 12px 14px;
   }
   .match-row + .match-row { border-top: 1px solid rgba(71,85,105,.4); }
+  .match-row.is-pref {
+    background: var(--pink-bg);
+    border-left: 3px solid var(--pink);
+  }
   .match-num {
-    font-size: .75rem;
+    font-size: .7rem;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
+    width: 48px;
+    flex-shrink: 0;
   }
   .match-duo {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  .duo-player-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
   }
   .duo-player {
-    padding: 4px 12px;
+    padding: 3px 10px;
     background: var(--surface);
-    border-radius: 999px;
-    font-size: .85rem;
+    font-size: .82rem;
     font-weight: 500;
+    border-radius: 999px 0 0 999px;
   }
-  .duo-sep { color: var(--text-muted); font-size: .8rem; }
+  .duo-player-side {
+    padding: 3px 6px;
+    font-size: .65rem;
+    font-weight: 700;
+    border-radius: 0 999px 999px 0;
+    text-transform: uppercase;
+    min-width: 22px;
+    text-align: center;
+  }
+  .side-L { background: rgba(59,130,246,.2); color: #60a5fa; }
+  .side-R { background: rgba(139,92,246,.2); color: #a78bfa; }
+  .side-B { background: rgba(71,85,105,.4); color: var(--text-muted); }
+  .duo-sep { color: var(--text-muted); font-size: .75rem; }
+  .match-tags {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
   .match-pts {
     font-weight: 700;
-    font-size: .95rem;
+    font-size: .9rem;
     color: var(--accent);
-    min-width: 50px;
+    min-width: 46px;
     text-align: right;
+    flex-shrink: 0;
   }
   .match-tag {
-    font-size: .7rem;
-    padding: 2px 8px;
+    font-size: .65rem;
+    padding: 1px 7px;
     border-radius: 999px;
     font-weight: 600;
-    margin-left: 4px;
   }
   .tag-high { background: var(--green-bg); color: var(--green); }
   .tag-low { background: var(--orange-bg); color: var(--orange); }
+  .tag-pref {
+    background: var(--pink-bg);
+    color: var(--pink);
+  }
 
   /* Player stats */
   .stats-bar {
-    padding: 16px 20px;
+    padding: 14px 16px;
     border-top: 1px solid var(--border);
   }
   .stats-bar h4 {
-    font-size: .8rem;
+    font-size: .72rem;
     color: var(--text-muted);
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     text-transform: uppercase;
     letter-spacing: .04em;
   }
-  .stats-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
+  .stats-chips { display: flex; flex-wrap: wrap; gap: 5px; }
   .stat-chip {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
+    gap: 5px;
+    padding: 3px 8px;
     background: var(--surface2);
     border-radius: 999px;
-    font-size: .8rem;
+    font-size: .75rem;
   }
   .stat-chip .sc-count {
     background: var(--accent);
     color: #fff;
-    width: 20px; height: 20px;
+    width: 18px; height: 18px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: .7rem;
+    font-size: .65rem;
     font-weight: 700;
   }
 
@@ -359,7 +534,7 @@
     padding: 12px 16px;
     border-radius: var(--radius-sm);
     font-size: .9rem;
-    margin: 20px;
+    margin: 16px;
   }
 
   /* Spinner */
@@ -372,72 +547,6 @@
     margin: 0 auto;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Roster actions */
-  .roster-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-  }
-  .btn-sm {
-    flex: 1;
-    padding: 8px;
-    background: var(--surface2);
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: .8rem;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .btn-sm:hover { background: var(--border); color: var(--text); }
-
-  /* Add player */
-  .add-player-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-  .add-player-row input {
-    flex: 1;
-    padding: 8px 12px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: .85rem;
-    outline: none;
-  }
-  .add-player-row input:focus { border-color: var(--accent); }
-  .add-player-row button {
-    padding: 8px 14px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    font-size: .85rem;
-    font-weight: 600;
-  }
-
-  /* Remove player btn */
-  .player-remove {
-    width: 24px; height: 24px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all .15s;
-  }
-  .player-item:hover .player-remove { opacity: 1; }
-  .player-remove:hover { background: rgba(239,68,68,.15); color: var(--red); }
 </style>
 </head>
 <body>
@@ -451,7 +560,7 @@
 <div class="grid">
 
   <!-- LEFT SIDEBAR -->
-  <div style="display:flex;flex-direction:column;gap:20px;">
+  <div class="sidebar">
 
     <!-- Roster card -->
     <div class="card">
@@ -462,13 +571,30 @@
       <div class="card-body">
         <div class="select-bar">
           <label><input type="checkbox" id="selectAll" checked> Selecteer alles</label>
+          <div class="side-legend"><span>L=Links</span> <span>B=Beide</span> <span>R=Rechts</span></div>
         </div>
         <div class="player-list" id="playerList"></div>
         <div class="add-player-row">
           <input type="text" id="newName" placeholder="Naam">
-          <input type="number" id="newPts" placeholder="Ptn" style="max-width:70px" value="50">
+          <input type="number" id="newPts" placeholder="Ptn" style="max-width:64px" value="50">
           <button onclick="addPlayer()">+</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Preferred Duos card -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Voorkeurs Duo's</h2>
+        <span class="badge badge-pink" id="duoCount">0</span>
+      </div>
+      <div class="card-body">
+        <div class="duo-select-row">
+          <select id="duoPlayer1"></select>
+          <select id="duoPlayer2"></select>
+          <button onclick="addPreferredDuo()">+</button>
+        </div>
+        <div class="duo-chips" id="duoChips"></div>
       </div>
     </div>
 
@@ -476,50 +602,23 @@
     <div class="card">
       <div class="card-header"><h2>Instellingen</h2></div>
       <div class="card-body">
-        <div class="settings-grid">
+        <div class="row-2">
           <div class="field">
-            <label>Mode</label>
-            <select id="mode">
-              <option value="DUO">DUO (punten per duo)</option>
-              <option value="ROTATIE">ROTATIE (punten per rotatie)</option>
-            </select>
+            <label>Min wedstrijden/speler</label>
+            <input type="number" id="minMatches" value="1" min="0" max="3">
           </div>
-          <div class="row-2">
-            <div class="field">
-              <label>Min punten</label>
-              <input type="number" id="minPts" value="100">
-            </div>
-            <div class="field">
-              <label>Max punten</label>
-              <input type="number" id="maxPts" value="200">
-            </div>
-          </div>
-          <div class="row-2">
-            <div class="field">
-              <label>Min wedstrijden/speler</label>
-              <input type="number" id="minMatches" value="1" min="0" max="3">
-            </div>
-            <div class="field">
-              <label>Max wedstrijden/speler</label>
-              <input type="number" id="maxMatches" value="3" min="1" max="3">
-            </div>
-          </div>
-          <div class="row-2">
-            <div class="field">
-              <label>Max oplossingen</label>
-              <input type="number" id="maxSolutions" value="200" min="1">
-            </div>
-            <div class="field">
-              <label>Random seed</label>
-              <input type="number" id="seed" value="1" min="0">
-            </div>
+          <div class="field">
+            <label>Max wedstrijden/speler</label>
+            <input type="number" id="maxMatches" value="3" min="1" max="3">
           </div>
         </div>
-        <button class="btn-generate" id="btnGenerate" onclick="generate()">
-          Genereer Duo's
-        </button>
       </div>
     </div>
+
+    <!-- Generate button -->
+    <button class="btn-generate" id="btnGenerate" onclick="generate()">
+      Genereer Duo's
+    </button>
   </div>
 
   <!-- RESULTS AREA -->
@@ -539,16 +638,17 @@
 <script>
 // ── Data ──
 let roster = [
-  { name: "Lotte Pauwels",     pts: 50,  selected: true },
-  { name: "Kristof Vanhout",   pts: 100, selected: true },
-  { name: "Kristien Petrlic",  pts: 50,  selected: true },
-  { name: "Elke Geysen",       pts: 50,  selected: true },
-  { name: "Alexia Vandelaer",  pts: 50,  selected: true },
-  { name: "Ruben Moermans",    pts: 100, selected: true },
-  { name: "George",            pts: 100, selected: true },
-  { name: "Dirk Ruttens",      pts: 100, selected: true },
+  { name: "Lotte P.",     pts: 50,  selected: true, side: "B" },
+  { name: "Kristof V.",   pts: 100, selected: true, side: "B" },
+  { name: "Kristien P.",  pts: 50,  selected: true, side: "B" },
+  { name: "Elke G.",      pts: 50,  selected: true, side: "B" },
+  { name: "Alexia V.",    pts: 50,  selected: true, side: "B" },
+  { name: "Ruben M.",     pts: 100, selected: true, side: "B" },
+  { name: "George",       pts: 100, selected: true, side: "B" },
+  { name: "Dirk R.",      pts: 100, selected: true, side: "B" },
 ];
 
+let preferredDuos = [];
 let solutions = [];
 let currentSol = 0;
 
@@ -561,26 +661,29 @@ function renderPlayers() {
     div.className = "player-item" + (p.selected ? " selected" : "");
     div.innerHTML = `
       <div class="check">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
       </div>
       <span class="player-name">${esc(p.name)}</span>
+      <div class="side-toggle" onclick="event.stopPropagation()">
+        <button class="side-btn${p.side==='L'?' active-L':''}" onclick="setSide(${i},'L')">L</button>
+        <button class="side-btn${p.side==='B'?' active-B':''}" onclick="setSide(${i},'B')">B</button>
+        <button class="side-btn${p.side==='R'?' active-R':''}" onclick="setSide(${i},'R')">R</button>
+      </div>
       <span class="player-pts">${p.pts} pts</span>
       <button class="player-remove" onclick="event.stopPropagation();removePlayer(${i})" title="Verwijder">&times;</button>
     `;
-    div.addEventListener("click", () => {
-      p.selected = !p.selected;
-      renderPlayers();
-    });
+    div.addEventListener("click", () => { p.selected = !p.selected; renderPlayers(); });
     list.appendChild(div);
   });
   updateCount();
+  renderDuoSelects();
 }
 
 function updateCount() {
   const n = roster.filter(p => p.selected).length;
   document.getElementById("selectedCount").textContent = n + " geselecteerd";
   document.getElementById("btnGenerate").disabled = n < 4;
-  document.getElementById("selectAll").checked = n === roster.length;
+  document.getElementById("selectAll").checked = n === roster.length && roster.length > 0;
 }
 
 document.getElementById("selectAll").addEventListener("change", (e) => {
@@ -588,13 +691,18 @@ document.getElementById("selectAll").addEventListener("change", (e) => {
   renderPlayers();
 });
 
+function setSide(i, side) {
+  roster[i].side = side;
+  renderPlayers();
+}
+
 function addPlayer() {
   const nameEl = document.getElementById("newName");
   const ptsEl = document.getElementById("newPts");
   const name = nameEl.value.trim();
   const pts = parseInt(ptsEl.value) || 50;
   if (!name) return;
-  roster.push({ name, pts, selected: true });
+  roster.push({ name, pts, selected: true, side: "B" });
   nameEl.value = "";
   renderPlayers();
 }
@@ -604,7 +712,9 @@ document.getElementById("newName").addEventListener("keydown", (e) => {
 });
 
 function removePlayer(i) {
+  const name = roster[i].name;
   roster.splice(i, 1);
+  preferredDuos = preferredDuos.filter(d => d[0] !== name && d[1] !== name);
   renderPlayers();
 }
 
@@ -614,7 +724,74 @@ function esc(s) {
   return d.innerHTML;
 }
 
-// ── Algorithm (ported from Python) ──
+// ── Preferred Duos UI ──
+function renderDuoSelects() {
+  const selected = roster.filter(p => p.selected);
+  const s1 = document.getElementById("duoPlayer1");
+  const s2 = document.getElementById("duoPlayer2");
+  const prev1 = s1.value, prev2 = s2.value;
+  s1.innerHTML = "";
+  s2.innerHTML = "";
+  selected.forEach(p => {
+    s1.innerHTML += `<option value="${esc(p.name)}">${esc(p.name)}</option>`;
+    s2.innerHTML += `<option value="${esc(p.name)}">${esc(p.name)}</option>`;
+  });
+  if (selected.length >= 2) {
+    s1.value = prev1 && selected.some(p => p.name === prev1) ? prev1 : selected[0].name;
+    s2.value = prev2 && selected.some(p => p.name === prev2) ? prev2 : selected[1].name;
+  }
+  renderDuoChips();
+}
+
+function addPreferredDuo() {
+  const p1 = document.getElementById("duoPlayer1").value;
+  const p2 = document.getElementById("duoPlayer2").value;
+  if (!p1 || !p2 || p1 === p2) return;
+  const key = [p1, p2].sort().join("|||");
+  if (preferredDuos.some(d => [...d].sort().join("|||") === key)) return;
+  preferredDuos.push([p1, p2]);
+  renderDuoChips();
+}
+
+function removePreferredDuo(idx) {
+  preferredDuos.splice(idx, 1);
+  renderDuoChips();
+}
+
+function renderDuoChips() {
+  const container = document.getElementById("duoChips");
+  document.getElementById("duoCount").textContent = preferredDuos.length;
+  container.innerHTML = "";
+  preferredDuos.forEach((duo, i) => {
+    container.innerHTML += `<div class="duo-chip">&#9829; ${esc(duo[0])} &amp; ${esc(duo[1])}
+      <button class="duo-chip-remove" onclick="removePreferredDuo(${i})">&times;</button></div>`;
+  });
+}
+
+// ── Side assignment helpers ──
+// Determine which side each player in a duo plays
+function assignSides(p1, p2, sideMap) {
+  const s1 = sideMap[p1], s2 = sideMap[p2];
+  // Direct assignments
+  if (s1 === "L" && s2 === "R") return ["L", "R"];
+  if (s1 === "R" && s2 === "L") return ["R", "L"];
+  if (s1 === "L" && s2 === "B") return ["L", "R"];
+  if (s1 === "B" && s2 === "L") return ["R", "L"];
+  if (s1 === "R" && s2 === "B") return ["R", "L"];
+  if (s1 === "B" && s2 === "R") return ["L", "R"];
+  // Both B
+  return ["B", "B"];
+}
+
+// Score a duo's side quality: L+R=2, L/R+B=1, B+B=0
+function duoSideScore(p1, p2, sideMap) {
+  const s1 = sideMap[p1], s2 = sideMap[p2];
+  if ((s1 === "L" && s2 === "R") || (s1 === "R" && s2 === "L")) return 2;
+  if (s1 === "B" && s2 === "B") return 0;
+  return 1; // one dedicated + one B
+}
+
+// ── Algorithm ──
 function combinations(arr, k) {
   const result = [];
   function bt(start, combo) {
@@ -630,7 +807,6 @@ function combinations(arr, k) {
 }
 
 function seededRandom(seed) {
-  // Simple mulberry32
   let s = seed | 0;
   return function() {
     s |= 0; s = s + 0x6D2B79F5 | 0;
@@ -648,9 +824,10 @@ function shuffle(arr, rng) {
 }
 
 function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
-                           minMatchesPerPlayer, maxMatchesPerPlayer, maxSols, seed) {
+                           minMatchesPerPlayer, maxMatchesPerPlayer, maxSols, seed, prefDuos) {
   const ptsMap = {};
-  rosterData.forEach(r => ptsMap[r.name] = r.pts);
+  const sideMap = {};
+  rosterData.forEach(r => { ptsMap[r.name] = r.pts; sideMap[r.name] = r.side || "B"; });
   const selSet = new Set(selectedNames);
   const players = rosterData.filter(r => selSet.has(r.name)).map(r => r.name);
   const n = players.length;
@@ -661,9 +838,17 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
     maxMatchesPerPlayer = 3;
   }
 
+  function duoSideCompatible(p1, p2) {
+    const s1 = sideMap[p1], s2 = sideMap[p2];
+    const hasLeft = (s1 === "L" || s1 === "B") || (s2 === "L" || s2 === "B");
+    const hasRight = (s1 === "R" || s1 === "B") || (s2 === "R" || s2 === "B");
+    return hasLeft && hasRight;
+  }
+
   function matchingsOfFour(four) {
     const [a,b,c,d] = four;
-    return [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
+    const all = [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
+    return all.filter(m => duoSideCompatible(m[0][0], m[0][1]) && duoSideCompatible(m[1][0], m[1][1]));
   }
 
   const rotations = [];
@@ -678,7 +863,6 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
       if (mode === "DUO") {
         if (!(minPts <= s1 && s1 <= maxPts && minPts <= s2 && s2 <= maxPts)) continue;
       } else {
-        const tot = new Set(four).size; // all unique
         const totPts = four.reduce((a, p) => a + ptsMap[p], 0);
         if (!(minPts <= totPts && totPts <= maxPts)) continue;
       }
@@ -688,7 +872,6 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
 
       if (s1 > s2) {
         const ordered = [canon(p1), canon(p2)];
-        const pairSet = new Set([p1.join("|||"), p2.join("|||")].map(x => [...x.split("|||")].sort().join("|||")));
         rotations.push({ ordered, sums: [s1, s2], pairKeys: pairKeys(ordered), fourSet, fourArr: [...fourSet] });
       } else if (s2 > s1) {
         const ordered = [canon(p2), canon(p1)];
@@ -723,21 +906,18 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
     for (const rot of rotations) {
       if (solutions.length >= maxSols) return;
 
-      // Check no pair reused
       let pairConflict = false;
       for (const pk of rot.pairKeys) {
         if (usedPairs.has(pk)) { pairConflict = true; break; }
       }
       if (pairConflict) continue;
 
-      // Check per-player max
       let ok = true;
       for (const p of rot.fourArr) {
         if ((counts[p] || 0) + 1 > maxMatchesPerPlayer) { ok = false; break; }
       }
       if (!ok) continue;
 
-      // Choose
       for (const p of rot.fourArr) counts[p] = (counts[p] || 0) + 1;
       const newUsed = new Set(usedPairs);
       for (const pk of rot.pairKeys) newUsed.add(pk);
@@ -751,6 +931,30 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
   }
 
   backtrack(0, new Set(), {}, []);
+
+  // Score and rank solutions
+  const prefSet = new Set((prefDuos || []).map(d => [...d].sort().join("|||")));
+
+  solutions.forEach(sol => {
+    let prefScore = 0;
+    let sideScore = 0;
+    sol.forEach(rot => {
+      rot.ordered.forEach(pair => {
+        const key = [...pair].sort().join("|||");
+        if (prefSet.size > 0 && prefSet.has(key)) prefScore++;
+        sideScore += duoSideScore(pair[0], pair[1], sideMap);
+      });
+    });
+    sol._prefScore = prefScore;
+    sol._sideScore = sideScore;
+  });
+
+  // Sort: preferred duos first (desc), then side score (desc)
+  solutions.sort((a, b) => {
+    if (b._prefScore !== a._prefScore) return b._prefScore - a._prefScore;
+    return b._sideScore - a._sideScore;
+  });
+
   return solutions;
 }
 
@@ -763,20 +967,19 @@ function generate() {
 
   content.innerHTML = `<div class="results-placeholder"><div class="spinner"></div><p>Oplossingen berekenen...</p></div>`;
 
-  // Use setTimeout to let UI update
   setTimeout(() => {
     const selected = roster.filter(p => p.selected).map(p => p.name);
-    const mode = document.getElementById("mode").value;
-    const minPts = parseFloat(document.getElementById("minPts").value) || 0;
-    const maxPts = parseFloat(document.getElementById("maxPts").value) || 9999;
+    const mode = "DUO";
+    const minPts = 0;
+    const maxPts = 9999;
     const minMatches = parseInt(document.getElementById("minMatches").value) || 0;
     const maxMatches = parseInt(document.getElementById("maxMatches").value) || 3;
-    const maxSols = parseInt(document.getElementById("maxSolutions").value) || 200;
-    const seed = parseInt(document.getElementById("seed").value) || 1;
+    const maxSols = 200;
+    const seed = 42;
 
     try {
       solutions = generateSchedules(roster, selected, minPts, maxPts, mode,
-                                    minMatches, maxMatches, maxSols, seed);
+                                    minMatches, maxMatches, maxSols, seed, preferredDuos);
       currentSol = 0;
       if (solutions.length === 0) {
         content.innerHTML = `<div class="error-msg">Geen geldige oplossingen gevonden met deze instellingen. Probeer de puntenlimieten aan te passen of meer spelers te selecteren.</div>`;
@@ -797,33 +1000,41 @@ function renderSolution() {
   const content = document.getElementById("resultsContent");
   const sol = solutions[currentSol];
   const ptsMap = {};
-  roster.forEach(r => ptsMap[r.name] = r.pts);
+  const sideMap = {};
+  roster.forEach(r => { ptsMap[r.name] = r.pts; sideMap[r.name] = r.side || "B"; });
+  const prefSet = new Set(preferredDuos.map(d => [...d].sort().join("|||")));
 
-  // Count matches per player for this solution
   const matchCount = {};
   sol.forEach(rot => {
     rot.fourArr.forEach(p => matchCount[p] = (matchCount[p] || 0) + 1);
   });
 
+  // Max possible side score = 6 duos * 2 = 12
+  const maxSideScore = sol.length * 2 * 2; // 3 rotations * 2 duos * 2 max per duo
+
   let html = `
     <div class="sol-nav">
-      <button onclick="prevSol()" ${currentSol === 0 ? 'disabled' : ''}>&#8592; Vorige</button>
-      <span class="sol-label">Oplossing ${currentSol + 1} van ${solutions.length}</span>
-      <button onclick="nextSol()" ${currentSol >= solutions.length - 1 ? 'disabled' : ''}>Volgende &#8594;</button>
-      <span class="sol-total">${solutions.length} oplossing${solutions.length !== 1 ? 'en' : ''} gevonden</span>
+      <button onclick="prevSol()" ${currentSol === 0 ? 'disabled' : ''}>&#8592;</button>
+      <span class="sol-label">Oplossing ${currentSol + 1} / ${solutions.length}</span>
+      <button onclick="nextSol()" ${currentSol >= solutions.length - 1 ? 'disabled' : ''}>&#8594;</button>
+      <span class="sol-total">${solutions.length} oplossing${solutions.length !== 1 ? 'en' : ''}</span>
+    </div>
+    <div class="score-bar">
+      <span class="score-label">Ranking:</span>
+      ${sol._prefScore > 0 ? `<span class="score-pill score-pill-pref">&#9829; ${sol._prefScore} voorkeursduo${sol._prefScore !== 1 ? "'s" : ''}</span>` : `<span class="score-pill" style="background:var(--surface2);color:var(--text-muted)">Geen voorkeursduo's</span>`}
+      <span class="score-pill score-pill-side">L/R ${sol._sideScore} / ${maxSideScore} zijde-score</span>
     </div>
     <div class="rotations">
   `;
 
   sol.forEach((rot, ri) => {
     const rotTotal = rot.fourArr.reduce((a, p) => a + ptsMap[p], 0);
-    const rotPlayers = [...rot.fourArr].sort().join(", ");
 
     html += `
       <div class="rotation-card">
         <div class="rotation-header">
           <h3>Rotatie ${ri + 1}</h3>
-          <span class="rot-total">${rotPlayers} &mdash; ${rotTotal} pts totaal</span>
+          <span class="rot-total">${rotTotal} pts totaal</span>
         </div>
     `;
 
@@ -831,14 +1042,27 @@ function renderSolution() {
       const matchNr = ri * 2 + mi + 1;
       const duoPts = ptsMap[pair[0]] + ptsMap[pair[1]];
       const isHigh = mi === 0;
+      const pairKey = [...pair].sort().join("|||");
+      const isPref = prefSet.has(pairKey);
+      const sides = assignSides(pair[0], pair[1], sideMap);
+
       html += `
-        <div class="match-row">
+        <div class="match-row${isPref ? ' is-pref' : ''}">
           <span class="match-num">Match ${matchNr}</span>
           <div class="match-duo">
-            <span class="duo-player">${esc(pair[0])}</span>
+            <div class="duo-player-wrap">
+              <span class="duo-player">${esc(pair[0])}</span>
+              <span class="duo-player-side side-${sides[0]}">${sides[0]}</span>
+            </div>
             <span class="duo-sep">&amp;</span>
-            <span class="duo-player">${esc(pair[1])}</span>
-            <span class="match-tag ${isHigh ? 'tag-high' : 'tag-low'}">${isHigh ? 'Hoogste' : 'Laagste'}</span>
+            <div class="duo-player-wrap">
+              <span class="duo-player">${esc(pair[1])}</span>
+              <span class="duo-player-side side-${sides[1]}">${sides[1]}</span>
+            </div>
+            <div class="match-tags">
+              <span class="match-tag ${isHigh ? 'tag-high' : 'tag-low'}">${isHigh ? 'Hoog' : 'Laag'}</span>
+              ${isPref ? '<span class="match-tag tag-pref">&#9829; Voorkeur</span>' : ''}
+            </div>
           </div>
           <span class="match-pts">${duoPts} pts</span>
         </div>
@@ -851,24 +1075,19 @@ function renderSolution() {
   html += `</div>`;
 
   // Stats bar
-  html += `
-    <div class="stats-bar">
-      <h4>Wedstrijden per speler</h4>
-      <div class="stats-chips">
-  `;
+  html += `<div class="stats-bar"><h4>Wedstrijden per speler</h4><div class="stats-chips">`;
   const sortedPlayers = Object.entries(matchCount).sort((a,b) => b[1] - a[1]);
   sortedPlayers.forEach(([name, count]) => {
-    html += `<div class="stat-chip"><span class="sc-count">${count}</span> ${esc(name)}</div>`;
+    const side = sideMap[name] || "B";
+    const sideLabel = side === "B" ? "" : ` (${side})`;
+    html += `<div class="stat-chip"><span class="sc-count">${count}</span> ${esc(name)}${sideLabel}</div>`;
   });
-
-  // Players not playing
   const selected = roster.filter(p => p.selected);
   selected.forEach(p => {
     if (!matchCount[p.name]) {
       html += `<div class="stat-chip" style="opacity:.5"><span class="sc-count" style="background:var(--border)">0</span> ${esc(p.name)}</div>`;
     }
   });
-
   html += `</div></div>`;
 
   content.innerHTML = html;
