@@ -969,6 +969,11 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
 
   backtrack(0, new Set(), {}, []);
 
+  // Order rotations within each solution by highest duo sum descending
+  solutions.forEach(sol => {
+    sol.sort((a, b) => b.sums[0] - a.sums[0]);
+  });
+
   // Score and rank solutions
   const prefSet = new Set((prefDuos || []).map(d => [...d].sort().join("|||")));
 
