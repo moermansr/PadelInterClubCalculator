@@ -875,14 +875,16 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
     const all = [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
     // Per interclub rules: strongest duo plays high match, weakest plays low.
     // Only keep the pairing(s) that maximize the top duo sum.
+    // Also allow pairings where both duos have equal sums (no wrong high/low).
     let bestHigh = 0;
     for (const m of all) {
       const hi = Math.max(ptsMap[m[0][0]] + ptsMap[m[0][1]], ptsMap[m[1][0]] + ptsMap[m[1][1]]);
       if (hi > bestHigh) bestHigh = hi;
     }
     return all.filter(m => {
-      const hi = Math.max(ptsMap[m[0][0]] + ptsMap[m[0][1]], ptsMap[m[1][0]] + ptsMap[m[1][1]]);
-      return hi === bestHigh;
+      const d1 = ptsMap[m[0][0]] + ptsMap[m[0][1]];
+      const d2 = ptsMap[m[1][0]] + ptsMap[m[1][1]];
+      return Math.max(d1, d2) === bestHigh || d1 === d2;
     });
   }
 
