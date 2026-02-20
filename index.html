@@ -426,6 +426,10 @@
     background: var(--pink-bg);
     border-left: 3px solid var(--pink);
   }
+  .match-row.is-conflict {
+    background: rgba(239,68,68,.06);
+    border-left: 3px solid var(--red);
+  }
   .match-num {
     font-size: .7rem;
     font-weight: 700;
@@ -491,6 +495,10 @@
   .tag-pref {
     background: var(--pink-bg);
     color: var(--pink);
+  }
+  .tag-conflict {
+    background: rgba(239,68,68,.12);
+    color: var(--red);
   }
 
   /* Player stats */
@@ -772,21 +780,22 @@ function renderDuoChips() {
 // Determine which side each player in a duo plays
 function assignSides(p1, p2, sideMap) {
   const s1 = sideMap[p1], s2 = sideMap[p2];
-  // Direct assignments
   if (s1 === "L" && s2 === "R") return ["L", "R"];
   if (s1 === "R" && s2 === "L") return ["R", "L"];
   if (s1 === "L" && s2 === "B") return ["L", "R"];
   if (s1 === "B" && s2 === "L") return ["R", "L"];
   if (s1 === "R" && s2 === "B") return ["R", "L"];
   if (s1 === "B" && s2 === "R") return ["L", "R"];
-  // Both B
+  if (s1 === "L" && s2 === "L") return ["L", "L"];
+  if (s1 === "R" && s2 === "R") return ["R", "R"];
   return ["B", "B"];
 }
 
-// Score a duo's side quality: L+R=2, L/R+B=1, B+B=0
+// Score a duo's side quality: L+R=2, L/R+B=1, B+B=0, L+L or R+R=-1
 function duoSideScore(p1, p2, sideMap) {
   const s1 = sideMap[p1], s2 = sideMap[p2];
   if ((s1 === "L" && s2 === "R") || (s1 === "R" && s2 === "L")) return 2;
+  if ((s1 === "L" && s2 === "L") || (s1 === "R" && s2 === "R")) return -1;
   if (s1 === "B" && s2 === "B") return 0;
   return 1; // one dedicated + one B
 }
@@ -838,17 +847,9 @@ function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
     maxMatchesPerPlayer = 3;
   }
 
-  function duoSideCompatible(p1, p2) {
-    const s1 = sideMap[p1], s2 = sideMap[p2];
-    const hasLeft = (s1 === "L" || s1 === "B") || (s2 === "L" || s2 === "B");
-    const hasRight = (s1 === "R" || s1 === "B") || (s2 === "R" || s2 === "B");
-    return hasLeft && hasRight;
-  }
-
   function matchingsOfFour(four) {
     const [a,b,c,d] = four;
-    const all = [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
-    return all.filter(m => duoSideCompatible(m[0][0], m[0][1]) && duoSideCompatible(m[1][0], m[1][1]));
+    return [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
   }
 
   const rotations = [];
@@ -1045,9 +1046,11 @@ function renderSolution() {
       const pairKey = [...pair].sort().join("|||");
       const isPref = prefSet.has(pairKey);
       const sides = assignSides(pair[0], pair[1], sideMap);
+      const isConflict = (sides[0] === sides[1]) && (sides[0] === "L" || sides[0] === "R");
+      const rowClass = isPref ? ' is-pref' : isConflict ? ' is-conflict' : '';
 
       html += `
-        <div class="match-row${isPref ? ' is-pref' : ''}">
+        <div class="match-row${rowClass}">
           <span class="match-num">Match ${matchNr}</span>
           <div class="match-duo">
             <div class="duo-player-wrap">
@@ -1062,6 +1065,7 @@ function renderSolution() {
             <div class="match-tags">
               <span class="match-tag ${isHigh ? 'tag-high' : 'tag-low'}">${isHigh ? 'Hoog' : 'Laag'}</span>
               ${isPref ? '<span class="match-tag tag-pref">&#9829; Voorkeur</span>' : ''}
+              ${isConflict ? '<span class="match-tag tag-conflict">&#9888; Zelfde zijde</span>' : ''}
             </div>
           </div>
           <span class="match-pts">${duoPts} pts</span>
