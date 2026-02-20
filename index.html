@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Padel Duo Calculator</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --border: #475569;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,.12);
+    --orange: #f59e0b;
+    --orange-bg: rgba(245,158,11,.12);
+    --red: #ef4444;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 0;
+    text-align: center;
+  }
+  header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  header h1 span { color: var(--accent); }
+  header p { color: var(--text-muted); font-size: .9rem; margin-top: 4px; }
+
+  /* Layout */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .card-body { padding: 16px 20px; }
+  .badge {
+    font-size: .75rem;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .badge-blue { background: rgba(59,130,246,.15); color: var(--accent); }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+
+  /* Player list */
+  .player-list { display: flex; flex-direction: column; gap: 4px; }
+  .player-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s;
+    user-select: none;
+  }
+  .player-item:hover { background: var(--surface2); }
+  .player-item.selected { background: rgba(59,130,246,.1); }
+
+  /* Custom checkbox */
+  .check {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .player-item.selected .check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check svg { display: none; }
+  .player-item.selected .check svg { display: block; }
+
+  .player-name { flex: 1; font-weight: 500; }
+  .player-pts {
+    font-size: .8rem;
+    color: var(--text-muted);
+    background: var(--surface2);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  /* Select all bar */
+  .select-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .select-bar label {
+    font-size: .85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .select-bar label input { accent-color: var(--accent); width:16px; height:16px; }
+
+  /* Settings */
+  .settings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .field label {
+    display: block;
+    font-size: .8rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: .9rem;
+    outline: none;
+    transition: border .15s;
+  }
+  .field input:focus, .field select:focus {
+    border-color: var(--accent);
+  }
+  .field select option { background: var(--bg); }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Generate button */
+  .btn-generate {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+  }
+  .btn-generate:hover { background: var(--accent-hover); }
+  .btn-generate:active { transform: scale(.98); }
+  .btn-generate:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Results area */
+  .results-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: var(--text-muted);
+    text-align: center;
+    gap: 12px;
+  }
+  .results-placeholder svg { opacity: .3; }
+
+  /* Solution navigation */
+  .sol-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .sol-nav button {
+    padding: 6px 14px;
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: background .15s;
+  }
+  .sol-nav button:hover { background: var(--border); }
+  .sol-nav button:disabled { opacity: .3; cursor: not-allowed; }
+  .sol-nav .sol-label {
+    font-weight: 600;
+    font-size: .95rem;
+    min-width: 160px;
+    text-align: center;
+  }
+  .sol-nav .sol-total {
+    margin-left: auto;
+    font-size: .8rem;
+    color: var(--text-muted);
+  }
+
+  /* Rotation cards */
+  .rotations { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .rotation-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .rotation-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .rotation-header h3 { font-size: .9rem; font-weight: 600; }
+  .rotation-header .rot-total {
+    font-size: .8rem;
+    color: var(--text-muted);
+  }
+
+  .match-row {
+    display: grid;
+    grid-template-columns: 50px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .match-row + .match-row { border-top: 1px solid rgba(71,85,105,.4); }
+  .match-num {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .match-duo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .duo-player {
+    padding: 4px 12px;
+    background: var(--surface);
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 500;
+  }
+  .duo-sep { color: var(--text-muted); font-size: .8rem; }
+  .match-pts {
+    font-weight: 700;
+    font-size: .95rem;
+    color: var(--accent);
+    min-width: 50px;
+    text-align: right;
+  }
+  .match-tag {
+    font-size: .7rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+  .tag-high { background: var(--green-bg); color: var(--green); }
+  .tag-low { background: var(--orange-bg); color: var(--orange); }
+
+  /* Player stats */
+  .stats-bar {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .stats-bar h4 {
+    font-size: .8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .stats-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--surface2);
+    border-radius: 999px;
+    font-size: .8rem;
+  }
+  .stat-chip .sc-count {
+    background: var(--accent);
+    color: #fff;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .7rem;
+    font-weight: 700;
+  }
+
+  /* Error message */
+  .error-msg {
+    background: rgba(239,68,68,.1);
+    border: 1px solid rgba(239,68,68,.3);
+    color: var(--red);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: .9rem;
+    margin: 20px;
+  }
+
+  /* Spinner */
+  .spinner {
+    width: 28px; height: 28px;
+    border: 3px solid var(--surface2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Roster actions */
+  .roster-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .btn-sm {
+    flex: 1;
+    padding: 8px;
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: .8rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-sm:hover { background: var(--border); color: var(--text); }
+
+  /* Add player */
+  .add-player-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .add-player-row input {
+    flex: 1;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: .85rem;
+    outline: none;
+  }
+  .add-player-row input:focus { border-color: var(--accent); }
+  .add-player-row button {
+    padding: 8px 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: .85rem;
+    font-weight: 600;
+  }
+
+  /* Remove player btn */
+  .player-remove {
+    width: 24px; height: 24px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all .15s;
+  }
+  .player-item:hover .player-remove { opacity: 1; }
+  .player-remove:hover { background: rgba(239,68,68,.15); color: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>Padel</span> Duo Calculator</h1>
+  <p>Genereer duo-indelingen voor interclub wedstrijden</p>
+</header>
+
+<div class="container">
+<div class="grid">
+
+  <!-- LEFT SIDEBAR -->
+  <div style="display:flex;flex-direction:column;gap:20px;">
+
+    <!-- Roster card -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Spelers</h2>
+        <span class="badge badge-blue" id="selectedCount">0 geselecteerd</span>
+      </div>
+      <div class="card-body">
+        <div class="select-bar">
+          <label><input type="checkbox" id="selectAll" checked> Selecteer alles</label>
+        </div>
+        <div class="player-list" id="playerList"></div>
+        <div class="add-player-row">
+          <input type="text" id="newName" placeholder="Naam">
+          <input type="number" id="newPts" placeholder="Ptn" style="max-width:70px" value="50">
+          <button onclick="addPlayer()">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings card -->
+    <div class="card">
+      <div class="card-header"><h2>Instellingen</h2></div>
+      <div class="card-body">
+        <div class="settings-grid">
+          <div class="field">
+            <label>Mode</label>
+            <select id="mode">
+              <option value="DUO">DUO (punten per duo)</option>
+              <option value="ROTATIE">ROTATIE (punten per rotatie)</option>
+            </select>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Min punten</label>
+              <input type="number" id="minPts" value="100">
+            </div>
+            <div class="field">
+              <label>Max punten</label>
+              <input type="number" id="maxPts" value="200">
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Min wedstrijden/speler</label>
+              <input type="number" id="minMatches" value="1" min="0" max="3">
+            </div>
+            <div class="field">
+              <label>Max wedstrijden/speler</label>
+              <input type="number" id="maxMatches" value="3" min="1" max="3">
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field">
+              <label>Max oplossingen</label>
+              <input type="number" id="maxSolutions" value="200" min="1">
+            </div>
+            <div class="field">
+              <label>Random seed</label>
+              <input type="number" id="seed" value="1" min="0">
+            </div>
+          </div>
+        </div>
+        <button class="btn-generate" id="btnGenerate" onclick="generate()">
+          Genereer Duo's
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS AREA -->
+  <div class="card" id="resultsCard">
+    <div id="resultsContent">
+      <div class="results-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+        <p>Selecteer spelers en klik op <strong>Genereer Duo's</strong></p>
+        <p style="font-size:.8rem">Minimaal 4 spelers vereist</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ── Data ──
+let roster = [
+  { name: "Lotte Pauwels",     pts: 50,  selected: true },
+  { name: "Kristof Vanhout",   pts: 100, selected: true },
+  { name: "Kristien Petrlic",  pts: 50,  selected: true },
+  { name: "Elke Geysen",       pts: 50,  selected: true },
+  { name: "Alexia Vandelaer",  pts: 50,  selected: true },
+  { name: "Ruben Moermans",    pts: 100, selected: true },
+  { name: "George",            pts: 100, selected: true },
+  { name: "Dirk Ruttens",      pts: 100, selected: true },
+];
+
+let solutions = [];
+let currentSol = 0;
+
+// ── Roster UI ──
+function renderPlayers() {
+  const list = document.getElementById("playerList");
+  list.innerHTML = "";
+  roster.forEach((p, i) => {
+    const div = document.createElement("div");
+    div.className = "player-item" + (p.selected ? " selected" : "");
+    div.innerHTML = `
+      <div class="check">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <span class="player-name">${esc(p.name)}</span>
+      <span class="player-pts">${p.pts} pts</span>
+      <button class="player-remove" onclick="event.stopPropagation();removePlayer(${i})" title="Verwijder">&times;</button>
+    `;
+    div.addEventListener("click", () => {
+      p.selected = !p.selected;
+      renderPlayers();
+    });
+    list.appendChild(div);
+  });
+  updateCount();
+}
+
+function updateCount() {
+  const n = roster.filter(p => p.selected).length;
+  document.getElementById("selectedCount").textContent = n + " geselecteerd";
+  document.getElementById("btnGenerate").disabled = n < 4;
+  document.getElementById("selectAll").checked = n === roster.length;
+}
+
+document.getElementById("selectAll").addEventListener("change", (e) => {
+  roster.forEach(p => p.selected = e.target.checked);
+  renderPlayers();
+});
+
+function addPlayer() {
+  const nameEl = document.getElementById("newName");
+  const ptsEl = document.getElementById("newPts");
+  const name = nameEl.value.trim();
+  const pts = parseInt(ptsEl.value) || 50;
+  if (!name) return;
+  roster.push({ name, pts, selected: true });
+  nameEl.value = "";
+  renderPlayers();
+}
+
+document.getElementById("newName").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addPlayer();
+});
+
+function removePlayer(i) {
+  roster.splice(i, 1);
+  renderPlayers();
+}
+
+function esc(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ── Algorithm (ported from Python) ──
+function combinations(arr, k) {
+  const result = [];
+  function bt(start, combo) {
+    if (combo.length === k) { result.push([...combo]); return; }
+    for (let i = start; i < arr.length; i++) {
+      combo.push(arr[i]);
+      bt(i + 1, combo);
+      combo.pop();
+    }
+  }
+  bt(0, []);
+  return result;
+}
+
+function seededRandom(seed) {
+  // Simple mulberry32
+  let s = seed | 0;
+  return function() {
+    s |= 0; s = s + 0x6D2B79F5 | 0;
+    let t = Math.imul(s ^ s >>> 15, 1 | s);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function shuffle(arr, rng) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function generateSchedules(rosterData, selectedNames, minPts, maxPts, mode,
+                           minMatchesPerPlayer, maxMatchesPerPlayer, maxSols, seed) {
+  const ptsMap = {};
+  rosterData.forEach(r => ptsMap[r.name] = r.pts);
+  const selSet = new Set(selectedNames);
+  const players = rosterData.filter(r => selSet.has(r.name)).map(r => r.name);
+  const n = players.length;
+  if (n < 4) return [];
+
+  if (n === 4) {
+    minMatchesPerPlayer = 3;
+    maxMatchesPerPlayer = 3;
+  }
+
+  function matchingsOfFour(four) {
+    const [a,b,c,d] = four;
+    return [[[a,b],[c,d]], [[a,c],[b,d]], [[a,d],[b,c]]];
+  }
+
+  const rotations = [];
+  const combos = combinations(players, 4);
+
+  for (const four of combos) {
+    for (const m of matchingsOfFour(four)) {
+      const [p1, p2] = m;
+      const s1 = ptsMap[p1[0]] + ptsMap[p1[1]];
+      const s2 = ptsMap[p2[0]] + ptsMap[p2[1]];
+
+      if (mode === "DUO") {
+        if (!(minPts <= s1 && s1 <= maxPts && minPts <= s2 && s2 <= maxPts)) continue;
+      } else {
+        const tot = new Set(four).size; // all unique
+        const totPts = four.reduce((a, p) => a + ptsMap[p], 0);
+        if (!(minPts <= totPts && totPts <= maxPts)) continue;
+      }
+
+      const canon = pair => [...pair].sort();
+      const fourSet = new Set(four);
+
+      if (s1 > s2) {
+        const ordered = [canon(p1), canon(p2)];
+        const pairSet = new Set([p1.join("|||"), p2.join("|||")].map(x => [...x.split("|||")].sort().join("|||")));
+        rotations.push({ ordered, sums: [s1, s2], pairKeys: pairKeys(ordered), fourSet, fourArr: [...fourSet] });
+      } else if (s2 > s1) {
+        const ordered = [canon(p2), canon(p1)];
+        rotations.push({ ordered, sums: [s2, s1], pairKeys: pairKeys(ordered), fourSet, fourArr: [...fourSet] });
+      } else {
+        const o1 = [canon(p1), canon(p2)];
+        const o2 = [canon(p2), canon(p1)];
+        rotations.push({ ordered: o1, sums: [s1, s2], pairKeys: pairKeys(o1), fourSet, fourArr: [...fourSet] });
+        rotations.push({ ordered: o2, sums: [s2, s1], pairKeys: pairKeys(o2), fourSet, fourArr: [...fourSet] });
+      }
+    }
+  }
+
+  function pairKeys(ordered) {
+    return ordered.map(pair => [...pair].sort().join("|||"));
+  }
+
+  const rng = seededRandom(seed);
+  shuffle(rotations, rng);
+
+  const solutions = [];
+
+  function backtrack(rotIdx, usedPairs, counts, chosen) {
+    if (solutions.length >= maxSols) return;
+    if (rotIdx === 3) {
+      if (players.every(p => (counts[p] || 0) >= minMatchesPerPlayer)) {
+        solutions.push([...chosen]);
+      }
+      return;
+    }
+
+    for (const rot of rotations) {
+      if (solutions.length >= maxSols) return;
+
+      // Check no pair reused
+      let pairConflict = false;
+      for (const pk of rot.pairKeys) {
+        if (usedPairs.has(pk)) { pairConflict = true; break; }
+      }
+      if (pairConflict) continue;
+
+      // Check per-player max
+      let ok = true;
+      for (const p of rot.fourArr) {
+        if ((counts[p] || 0) + 1 > maxMatchesPerPlayer) { ok = false; break; }
+      }
+      if (!ok) continue;
+
+      // Choose
+      for (const p of rot.fourArr) counts[p] = (counts[p] || 0) + 1;
+      const newUsed = new Set(usedPairs);
+      for (const pk of rot.pairKeys) newUsed.add(pk);
+      chosen.push(rot);
+
+      backtrack(rotIdx + 1, newUsed, counts, chosen);
+
+      chosen.pop();
+      for (const p of rot.fourArr) counts[p]--;
+    }
+  }
+
+  backtrack(0, new Set(), {}, []);
+  return solutions;
+}
+
+// ── Generate ──
+function generate() {
+  const btn = document.getElementById("btnGenerate");
+  const content = document.getElementById("resultsContent");
+  btn.disabled = true;
+  btn.textContent = "Berekenen...";
+
+  content.innerHTML = `<div class="results-placeholder"><div class="spinner"></div><p>Oplossingen berekenen...</p></div>`;
+
+  // Use setTimeout to let UI update
+  setTimeout(() => {
+    const selected = roster.filter(p => p.selected).map(p => p.name);
+    const mode = document.getElementById("mode").value;
+    const minPts = parseFloat(document.getElementById("minPts").value) || 0;
+    const maxPts = parseFloat(document.getElementById("maxPts").value) || 9999;
+    const minMatches = parseInt(document.getElementById("minMatches").value) || 0;
+    const maxMatches = parseInt(document.getElementById("maxMatches").value) || 3;
+    const maxSols = parseInt(document.getElementById("maxSolutions").value) || 200;
+    const seed = parseInt(document.getElementById("seed").value) || 1;
+
+    try {
+      solutions = generateSchedules(roster, selected, minPts, maxPts, mode,
+                                    minMatches, maxMatches, maxSols, seed);
+      currentSol = 0;
+      if (solutions.length === 0) {
+        content.innerHTML = `<div class="error-msg">Geen geldige oplossingen gevonden met deze instellingen. Probeer de puntenlimieten aan te passen of meer spelers te selecteren.</div>`;
+      } else {
+        renderSolution();
+      }
+    } catch (e) {
+      content.innerHTML = `<div class="error-msg">Fout: ${esc(e.message)}</div>`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = "Genereer Duo's";
+  }, 50);
+}
+
+// ── Render solution ──
+function renderSolution() {
+  const content = document.getElementById("resultsContent");
+  const sol = solutions[currentSol];
+  const ptsMap = {};
+  roster.forEach(r => ptsMap[r.name] = r.pts);
+
+  // Count matches per player for this solution
+  const matchCount = {};
+  sol.forEach(rot => {
+    rot.fourArr.forEach(p => matchCount[p] = (matchCount[p] || 0) + 1);
+  });
+
+  let html = `
+    <div class="sol-nav">
+      <button onclick="prevSol()" ${currentSol === 0 ? 'disabled' : ''}>&#8592; Vorige</button>
+      <span class="sol-label">Oplossing ${currentSol + 1} van ${solutions.length}</span>
+      <button onclick="nextSol()" ${currentSol >= solutions.length - 1 ? 'disabled' : ''}>Volgende &#8594;</button>
+      <span class="sol-total">${solutions.length} oplossing${solutions.length !== 1 ? 'en' : ''} gevonden</span>
+    </div>
+    <div class="rotations">
+  `;
+
+  sol.forEach((rot, ri) => {
+    const rotTotal = rot.fourArr.reduce((a, p) => a + ptsMap[p], 0);
+    const rotPlayers = [...rot.fourArr].sort().join(", ");
+
+    html += `
+      <div class="rotation-card">
+        <div class="rotation-header">
+          <h3>Rotatie ${ri + 1}</h3>
+          <span class="rot-total">${rotPlayers} &mdash; ${rotTotal} pts totaal</span>
+        </div>
+    `;
+
+    rot.ordered.forEach((pair, mi) => {
+      const matchNr = ri * 2 + mi + 1;
+      const duoPts = ptsMap[pair[0]] + ptsMap[pair[1]];
+      const isHigh = mi === 0;
+      html += `
+        <div class="match-row">
+          <span class="match-num">Match ${matchNr}</span>
+          <div class="match-duo">
+            <span class="duo-player">${esc(pair[0])}</span>
+            <span class="duo-sep">&amp;</span>
+            <span class="duo-player">${esc(pair[1])}</span>
+            <span class="match-tag ${isHigh ? 'tag-high' : 'tag-low'}">${isHigh ? 'Hoogste' : 'Laagste'}</span>
+          </div>
+          <span class="match-pts">${duoPts} pts</span>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `</div>`;
+
+  // Stats bar
+  html += `
+    <div class="stats-bar">
+      <h4>Wedstrijden per speler</h4>
+      <div class="stats-chips">
+  `;
+  const sortedPlayers = Object.entries(matchCount).sort((a,b) => b[1] - a[1]);
+  sortedPlayers.forEach(([name, count]) => {
+    html += `<div class="stat-chip"><span class="sc-count">${count}</span> ${esc(name)}</div>`;
+  });
+
+  // Players not playing
+  const selected = roster.filter(p => p.selected);
+  selected.forEach(p => {
+    if (!matchCount[p.name]) {
+      html += `<div class="stat-chip" style="opacity:.5"><span class="sc-count" style="background:var(--border)">0</span> ${esc(p.name)}</div>`;
+    }
+  });
+
+  html += `</div></div>`;
+
+  content.innerHTML = html;
+}
+
+function prevSol() {
+  if (currentSol > 0) { currentSol--; renderSolution(); }
+}
+function nextSol() {
+  if (currentSol < solutions.length - 1) { currentSol++; renderSolution(); }
+}
+
+// ── Init ──
+renderPlayers();
+</script>
+</body>
+</html>
