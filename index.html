@@ -113,14 +113,24 @@
   .check svg { display: none; }
   .player-item.selected .check svg { display: block; }
 
-  .player-name { flex: 1; font-weight: 500; font-size: .88rem; }
+  .player-name {
+    flex: 1;
+    font-weight: 500;
+    font-size: .88rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .player-pts {
     font-size: .72rem;
     color: var(--text-muted);
     background: var(--surface2);
-    padding: 1px 7px;
+    padding: 1px 0;
     border-radius: 999px;
     flex-shrink: 0;
+    width: 46px;
+    text-align: center;
   }
 
   /* Select all bar */
@@ -320,6 +330,14 @@
     opacity: .6;
   }
   .duo-chip-remove:hover { opacity: 1; }
+  .duo-empty {
+    font-size: .75rem;
+    color: var(--text-muted);
+    opacity: .6;
+    text-align: center;
+    padding: 10px 0 2px;
+    font-style: italic;
+  }
 
   /* Results area */
   .results-placeholder {
@@ -447,8 +465,7 @@
   }
   .duo-player-wrap {
     display: flex;
-    align-items: center;
-    gap: 0;
+    align-items: stretch;
   }
   .duo-player {
     padding: 3px 10px;
@@ -458,13 +475,15 @@
     border-radius: 999px 0 0 999px;
   }
   .duo-player-side {
-    padding: 3px 6px;
+    padding: 0 6px;
     font-size: .65rem;
     font-weight: 700;
     border-radius: 0 999px 999px 0;
     text-transform: uppercase;
     min-width: 22px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .side-L { background: rgba(59,130,246,.2); color: #60a5fa; }
   .side-R { background: rgba(139,92,246,.2); color: #a78bfa; }
@@ -597,12 +616,14 @@
         <span class="badge badge-pink" id="duoCount">0</span>
       </div>
       <div class="card-body">
+        <label style="font-size:.75rem;color:var(--text-muted);margin-bottom:6px;display:block">Voeg een voorkeursduo toe:</label>
         <div class="duo-select-row">
           <select id="duoPlayer1"></select>
           <select id="duoPlayer2"></select>
           <button onclick="addPreferredDuo()">+</button>
         </div>
-        <div class="duo-chips" id="duoChips"></div>
+        <div id="duoChips" class="duo-chips"></div>
+        <div id="duoEmpty" class="duo-empty">Nog geen voorkeursduo's toegevoegd</div>
       </div>
     </div>
 
@@ -768,8 +789,10 @@ function removePreferredDuo(idx) {
 
 function renderDuoChips() {
   const container = document.getElementById("duoChips");
+  const empty = document.getElementById("duoEmpty");
   document.getElementById("duoCount").textContent = preferredDuos.length;
   container.innerHTML = "";
+  empty.style.display = preferredDuos.length === 0 ? "block" : "none";
   preferredDuos.forEach((duo, i) => {
     container.innerHTML += `<div class="duo-chip">&#9829; ${esc(duo[0])} &amp; ${esc(duo[1])}
       <button class="duo-chip-remove" onclick="removePreferredDuo(${i})">&times;</button></div>`;
