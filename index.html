@@ -641,6 +641,13 @@
             <input type="number" id="maxMatches" value="3" min="1" max="3">
           </div>
         </div>
+        <div class="row-2" style="margin-top:.5rem">
+          <div class="field">
+            <label>Min punten per duo</label>
+            <input type="number" id="minDuoPts" value="0" min="0" max="9999">
+          </div>
+          <div class="field"></div>
+        </div>
       </div>
     </div>
 
@@ -1012,7 +1019,7 @@ function generate() {
   setTimeout(() => {
     const selected = roster.filter(p => p.selected).map(p => p.name);
     const mode = "DUO";
-    const minPts = 0;
+    const minPts = parseInt(document.getElementById("minDuoPts").value) || 0;
     const maxPts = 9999;
     const minMatches = parseInt(document.getElementById("minMatches").value) || 0;
     const maxMatches = parseInt(document.getElementById("maxMatches").value) || 3;
